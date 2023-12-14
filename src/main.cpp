@@ -6,6 +6,9 @@
 #include <Firebase.h>
 #include <addons/TokenHelper.h>
 
+#define FIREBASE_API_KEY ""
+#define FIREBASE_DB_URL ""
+
 struct _NetworkConfig {
   const char *ssid;
   const char *password;
@@ -24,7 +27,7 @@ struct _FirebaseConfig {
   FirebaseConfig config;
   FirebaseAuth auth;
 } firebaseConfig = {
-  .dbUrl = FIREBASE_REALTIME_URL,
+  .dbUrl = FIREBASE_DB_URL,
   .path = "/dispositivos",
   .deviceId = "",
   .apiKey = FIREBASE_API_KEY,
