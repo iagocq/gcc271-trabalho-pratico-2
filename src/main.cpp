@@ -38,9 +38,13 @@ struct _FirebaseConfig {
 struct _Calibration {
   float low;
   float high;
+  bool led;
+  int ledPin;
 } calibration = {
   .low = 0,
-  .high = 1
+  .high = 1,
+  .led = false,
+  .ledPin = 2
 };
 
 float frandom(float low, float high) {
@@ -56,16 +60,17 @@ bool connectionRound();
 void setup() {
   Serial.begin(115200);
   while (!Serial);
+  pinMode(calibration.ledPin, OUTPUT);
   setupWifi();
   setupFirebase();
 }
 
 void loop() {
-  if (setupWifi()) {
-    setupFirebase();
-  }
-
   try {
+    if (setupWifi()) {
+      setupFirebase();
+    }
+
     readCalibration();
     publishReadings();
   } catch (const std::exception& e) {
@@ -99,6 +104,7 @@ void readCalibration() {
 
   FirebaseJson json = data.jsonObject();
   FirebaseJsonData d;
+
   if (json.get(d, "baixo")) {
     calibration.low = d.to<float>();
   } else {
@@ -109,6 +115,13 @@ void readCalibration() {
     calibration.high = d.to<float>();
   } else {
     Serial.println("Failed to read calibration high");
+  }
+
+  if (json.get(d, "led")) {
+    calibration.led = d.to<bool>();
+    digitalWrite(calibration.ledPin, calibration.led);
+  } else {
+    Serial.println("Failed to read calibration led");
   }
 
   Serial.printf("Calibration: %.2f - %.2f\n", calibration.low, calibration.high);
