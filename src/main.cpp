@@ -76,7 +76,7 @@ void readCalibration() {
   Serial.println("Reading calibration");
 
   char calibrationPath[256];
-  sprintf(calibrationPath, "%s/%s/calibracao", firebaseConfig.path, firebaseConfig.deviceId.c_str());
+  sprintf(calibrationPath, "%s/%s/calibragem", firebaseConfig.path, firebaseConfig.deviceId.c_str());
 
   FirebaseData data;
   if (Firebase.RTDB.getJSON(&data, calibrationPath)) {
